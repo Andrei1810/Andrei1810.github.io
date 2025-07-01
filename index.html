@@ -62,6 +62,21 @@
     a:hover {
       text-decoration: underline;
     }
+    .gradient-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: linear-gradient(90deg,rgba(255, 71, 71, 1) 0%, rgba(253, 29, 29, 1) 29%, rgba(69, 90, 252, 1) 100%);
+  background-size: 600% 600%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: flutterGradient 5s ease infinite;
+}
+
+@keyframes flutterGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
   </style>
 
   <script type="application/ld+json">
@@ -89,7 +104,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Andrei Fatin</h1>
+    <h1 class="gradient-text">Andrei Fatin</h1>
     <p>Cinco Ranch Highschool Student</p>
     <p>Check out my <a href="https://www.youtube.com/@MAH0RAGA_" target="_blank">Youtube</a></p>
     <p>And my <a href="https://www.twitch.tv/andrei1810_" target="_blank">Twitch</a></p> 
