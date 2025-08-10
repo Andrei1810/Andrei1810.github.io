@@ -1,71 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>andrei1810 — Virtual Scroll Cube</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Andrei1810 Cube</title>
   <style>
-    :root{
-      --bg:#0b0f15;
-      --hue:210;
+    :root { --hue: 210; }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background: hsl(var(--hue), 70%, 15%);
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;overflow:hidden;background:linear-gradient(180deg,#071021 0%,var(--bg) 60%);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    .site{
-      height:100%;display:grid;grid-template-columns: 260px 1fr;gap:24px;align-items:center;padding:48px;
+    .label {
+      font-size: 2rem;
+      padding: 20px;
+      flex-shrink: 0;
     }
-    .sidebar{
-      display:flex;flex-direction:column;gap:18px;padding:20px;border-radius:16px;background:rgba(255,255,255,0.02);backdrop-filter: blur(6px);
-      box-shadow: 0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    .cube {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      transform-style: preserve-3d;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .logo{color: white;font-weight:700;font-size:28px;letter-spacing:1px;display:flex;align-items:center;gap:12px;}
-    .logo .dot{width:12px;height:12px;border-radius:4px;background:linear-gradient(135deg,hsl(var(--hue) 90% 60%), hsl(calc(var(--hue) + 60) 90% 60%));}
-    .sidebar p{color:rgba(255,255,255,0.6);margin:0;font-size:13px}
-    .main{display:flex;align-items:center;justify-content:center;}
-    .stage{width:360px;height:360px;display:grid;place-items:center;perspective:1100px;}
-    .cube-wrap{width:220px;height:220px;transform-style:preserve-3d;}
-    .cube{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.25s ease-out;}
-    .face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:rgba(0,0,0,0.12);font-size:22px;border-radius:8px;background: linear-gradient(180deg, hsl(var(--hue) 85% 58%), hsl(calc(var(--hue) + 18) 85% 48%));box-shadow: 0 10px 30px rgba(2,10,25,0.6), inset 0 1px 0 rgba(255,255,255,0.12);}
-    .face--front  { transform: translateZ(110px); }
-    .face--back   { transform: rotateY(180deg) translateZ(110px); }
-    .face--right  { transform: rotateY(90deg) translateZ(110px); }
-    .face--left   { transform: rotateY(-90deg) translateZ(110px); }
-    .face--top    { transform: rotateX(90deg) translateZ(110px); }
-    .face--bottom { transform: rotateX(-90deg) translateZ(110px); }
+    .face {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background: hsl(var(--hue), 70%, 50%);
+      border: 2px solid white;
+      opacity: 0.9;
+    }
+    .front  { transform: rotateY(0deg) translateZ(75px); }
+    .back   { transform: rotateY(180deg) translateZ(75px); }
+    .right  { transform: rotateY(90deg) translateZ(75px); }
+    .left   { transform: rotateY(-90deg) translateZ(75px); }
+    .top    { transform: rotateX(90deg) translateZ(75px); }
+    .bottom { transform: rotateX(-90deg) translateZ(75px); }
   </style>
 </head>
 <body>
-  <div class="site">
-    <aside class="sidebar">
-      <div class="logo"><div class="dot"></div><div>Andrei1810</div></div>
-      <p></p>
-    </aside>
-    <main class="main">
-      <div class="stage">
-        <div class="cube-wrap" id="cubeWrap">
-          <div class="cube" id="cube">
-            <div class="face face--front"></div>
-            <div class="face face--back"></div>
-            <div class="face face--right"></div>
-            <div class="face face--left"></div>
-            <div class="face face--top"></div>
-            <div class="face face--bottom"></div>
-          </div>
-        </div>
-      </div>
-    </main>
+  <div class="label">andrei1810</div>
+  <div class="cube" id="cube">
+    <div class="face front"></div>
+    <div class="face back"></div>
+    <div class="face right"></div>
+    <div class="face left"></div>
+    <div class="face top"></div>
+    <div class="face bottom"></div>
   </div>
+
   <script>
     const cube = document.getElementById('cube');
     const root = document.documentElement;
-    const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
     let virtualScroll = 0, targetRotX = 0, targetRotY = 0, targetHue = 210;
     let curRotX = 0, curRotY = 0, curHue = 210;
 
     function updateTargets(){
-      targetRotX = virtualScroll * 720;
-      targetRotY = virtualScroll * 1080;
-      targetHue = Math.round(virtualScroll * 360);
+      targetRotX = virtualScroll * 360;
+      targetRotY = virtualScroll * 540;
+      targetHue = ((virtualScroll * 120) % 360 + 360) % 360;
     }
 
     function loop(){
@@ -79,8 +80,7 @@
     }
 
     window.addEventListener('wheel', e => {
-      virtualScroll += e.deltaY * 0.001;
-      virtualScroll = clamp(virtualScroll, 0, 1);
+      virtualScroll += e.deltaY * 0.002;
       updateTargets();
     });
 
@@ -90,8 +90,7 @@
     });
     window.addEventListener('touchmove', e => {
       let dy = touchStartY - e.touches[0].clientY;
-      virtualScroll += dy * 0.002;
-      virtualScroll = clamp(virtualScroll, 0, 1);
+      virtualScroll += dy * 0.004;
       updateTargets();
       touchStartY = e.touches[0].clientY;
     });
