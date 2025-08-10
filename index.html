@@ -1,100 +1,45 @@
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>andrei1810 — Scroll Cube</title>
+  <title>andrei1810 — Virtual Scroll Cube</title>
   <style>
     :root{
       --bg:#0b0f15;
-      --panel: rgba(255,255,255,0.03);
-      --accent: hsl(200 90% 60%);
-      --hue: 210;
+      --hue:210;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071021 0%,var(--bg) 60%);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-
+    html,body{height:100%;margin:0;overflow:hidden;background:linear-gradient(180deg,#071021 0%,var(--bg) 60%);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
     .site{
-      min-height:200vh; /* make the page scrollable so scroll affects cube */
-      display:grid;
-      grid-template-columns: 260px 1fr;
-      gap:24px;
-      align-items:start;
-      padding:48px;
+      height:100%;display:grid;grid-template-columns: 260px 1fr;gap:24px;align-items:center;padding:48px;
     }
-
-    /* Left bar */
     .sidebar{
-      position:sticky; top:48px; align-self:start;
-      height:calc(100vh - 96px);
-      display:flex;flex-direction:column;justify-content:flex-start;gap:18px;
-      padding:20px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter: blur(6px);
+      display:flex;flex-direction:column;gap:18px;padding:20px;border-radius:16px;background:rgba(255,255,255,0.02);backdrop-filter: blur(6px);
       box-shadow: 0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
     }
-
-    .logo{
-      color: white;font-weight:700;font-size:28px;letter-spacing:1px;
-      display:flex;align-items:center;gap:12px;
-    }
-    .logo .dot{width:12px;height:12px;border-radius:4px;background:linear-gradient(135deg,hsl(var(--hue) 90% 60%), hsl(calc(var(--hue) + 60) 90% 60%));box-shadow:0 6px 20px rgba(0,0,0,0.6), 0 0 24px rgba(255,255,255,0.04) }
-
+    .logo{color: white;font-weight:700;font-size:28px;letter-spacing:1px;display:flex;align-items:center;gap:12px;}
+    .logo .dot{width:12px;height:12px;border-radius:4px;background:linear-gradient(135deg,hsl(var(--hue) 90% 60%), hsl(calc(var(--hue) + 60) 90% 60%));}
     .sidebar p{color:rgba(255,255,255,0.6);margin:0;font-size:13px}
-
-    /* Main area */
-    .main{
-      display:flex;align-items:center;justify-content:center;min-height:80vh;padding:40px;
-    }
-
-    .stage{
-      width:360px;height:360px;display:grid;place-items:center;
-      perspective:1100px;
-    }
-
-    /* Cube */
-    .cube-wrap{width:220px;height:220px;transform-style:preserve-3d;transition:transform 0.3s cubic-bezier(.2,.9,.2,1);}
-    .cube{
-      position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.25s ease-out;
-    }
-
-    .face{
-      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:rgba(0,0,0,0.12);font-size:22px;border-radius:8px;
-      background: linear-gradient(180deg, hsl(var(--hue) 85% 58%), hsl(calc(var(--hue) + 18) 85% 48%));
-      box-shadow: 0 10px 30px rgba(2,10,25,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.03);
-    }
-
+    .main{display:flex;align-items:center;justify-content:center;}
+    .stage{width:360px;height:360px;display:grid;place-items:center;perspective:1100px;}
+    .cube-wrap{width:220px;height:220px;transform-style:preserve-3d;}
+    .cube{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.25s ease-out;}
+    .face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:rgba(0,0,0,0.12);font-size:22px;border-radius:8px;background: linear-gradient(180deg, hsl(var(--hue) 85% 58%), hsl(calc(var(--hue) + 18) 85% 48%));box-shadow: 0 10px 30px rgba(2,10,25,0.6), inset 0 1px 0 rgba(255,255,255,0.12);}
     .face--front  { transform: translateZ(110px); }
     .face--back   { transform: rotateY(180deg) translateZ(110px); }
     .face--right  { transform: rotateY(90deg) translateZ(110px); }
     .face--left   { transform: rotateY(-90deg) translateZ(110px); }
     .face--top    { transform: rotateX(90deg) translateZ(110px); }
     .face--bottom { transform: rotateX(-90deg) translateZ(110px); }
-
-    /* small UI hint */
-    .hint{margin-top:auto;color:rgba(255,255,255,0.45);font-size:13px}
-
-    /* responsive tweaks */
-    @media (max-width:800px){
-      .site{grid-template-columns:1fr;padding:28px}
-      .sidebar{position:relative;height:auto;order:2}
-      .main{order:1}
-      .stage{width:260px;height:260px}
-      .cube-wrap{width:180px;height:180px}
-    }
-
-    /* make hue variable available to CSS transforms via filter for extra shimmer */
-    .cube .face{filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6));}
-
   </style>
 </head>
 <body>
   <div class="site">
-    <aside class="sidebar" aria-label="sidebar">
-      <div class="logo"><div class="dot" aria-hidden></div><div>andrei1810</div></div>
-      <p>Scroll to rotate the cube. The cube's color shifts with how far you scroll — neat for headers, intros, or as a site accent.</p>
-
-      <div class="hint">Pro tip: page is tall to give you a full-color sweep. Try quickly flicking the scroll for a faster spin.</div>
+    <aside class="sidebar">
+      <div class="logo"><div class="dot"></div><div>andrei1810</div></div>
+      <p>Use your mouse wheel or swipe to rotate the cube. The cube's color changes based on virtual scroll.</p>
     </aside>
-
     <main class="main">
       <div class="stage">
         <div class="cube-wrap" id="cubeWrap">
@@ -110,81 +55,49 @@
       </div>
     </main>
   </div>
-
   <script>
-    (function(){
-      const cube = document.getElementById('cube');
-      const cubeWrap = document.getElementById('cubeWrap');
-      const root = document.documentElement;
+    const cube = document.getElementById('cube');
+    const root = document.documentElement;
+    const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+    let virtualScroll = 0, targetRotX = 0, targetRotY = 0, targetHue = 210;
+    let curRotX = 0, curRotY = 0, curHue = 210;
 
-      // utility: clamp
-      const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+    function updateTargets(){
+      targetRotX = virtualScroll * 720;
+      targetRotY = virtualScroll * 1080;
+      targetHue = Math.round(virtualScroll * 360);
+    }
 
-      // compute document scroll fraction between 0 and 1
-      function getScrollFraction(){
-        const sc = window.scrollY || window.pageYOffset;
-        const full = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-        return clamp(sc / full, 0, 1);
-      }
-
-      // animation loop to apply transforms smoothly
-      let last = 0;
-      let targetRotX = 0, targetRotY = 0, targetHue = 210;
-      let curRotX = 0, curRotY = 0, curHue = 210;
-
-      function updateTargets(){
-        const t = getScrollFraction();
-        // rotation mapping: more scroll -> more rotation
-        // We'll spin X by up to 720deg and Y by up to 1080deg for a dramatic effect
-        targetRotX = t * 720; // degrees
-        targetRotY = t * 1080;
-        // color mapping: use hue 0..360 (or 160..360 for nicer palette)
-        targetHue = Math.round(t * 360);
-      }
-
-      function loop(ts){
-        if(!last) last = ts;
-        const dt = ts - last; last = ts;
-
-        // ease toward target
-        const ease = 0.12; // lower = slower
-        curRotX += (targetRotX - curRotX) * ease;
-        curRotY += (targetRotY - curRotY) * ease;
-        curHue  += (targetHue - curHue) * ease;
-
-        // apply transforms
-        cube.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg)`;
-        // set CSS hue var to change face colors
-        root.style.setProperty('--hue', Math.floor(curHue));
-
-        requestAnimationFrame(loop);
-      }
-
-      // listen to scroll and resize to update targets
-      window.addEventListener('scroll', () => { updateTargets(); });
-      window.addEventListener('resize', () => { updateTargets(); });
-
-      // initial
-      updateTargets();
+    function loop(){
+      const ease = 0.12;
+      curRotX += (targetRotX - curRotX) * ease;
+      curRotY += (targetRotY - curRotY) * ease;
+      curHue  += (targetHue - curHue) * ease;
+      cube.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg)`;
+      root.style.setProperty('--hue', Math.floor(curHue));
       requestAnimationFrame(loop);
+    }
 
-      // small interactivity: drag to rotate (desktop)
-      let dragging=false, startX=0, startY=0, initX=0, initY=0;
-      cubeWrap.addEventListener('pointerdown', (e)=>{
-        dragging=true; cubeWrap.setPointerCapture(e.pointerId);
-        startX = e.clientX; startY = e.clientY; initX = targetRotX; initY = targetRotY;
-      });
-      window.addEventListener('pointermove', (e)=>{
-        if(!dragging) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        // adjust targets directly so animation eases to the new values
-        targetRotY = initY + dx * 0.6;
-        targetRotX = initX - dy * 0.6;
-      });
-      window.addEventListener('pointerup', (e)=>{ if(dragging){ dragging=false; }});
+    window.addEventListener('wheel', e => {
+      virtualScroll += e.deltaY * 0.001;
+      virtualScroll = clamp(virtualScroll, 0, 1);
+      updateTargets();
+    });
 
-    })();
+    let touchStartY = 0;
+    window.addEventListener('touchstart', e => {
+      touchStartY = e.touches[0].clientY;
+    });
+    window.addEventListener('touchmove', e => {
+      let dy = touchStartY - e.touches[0].clientY;
+      virtualScroll += dy * 0.002;
+      virtualScroll = clamp(virtualScroll, 0, 1);
+      updateTargets();
+      touchStartY = e.touches[0].clientY;
+    });
+
+    updateTargets();
+    loop();
   </script>
 </body>
 </html>
