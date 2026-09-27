@@ -17,87 +17,9 @@
       font-family:  "Times New Roman", Times, serif;
       overflow: hidden;
     }
-    .label {
-      font-size: 2rem;
-      padding: 20px;
-      flex-shrink: 0;
-    }
-    .cube {
-      position: relative;
-      width: 150px;
-      height: 150px;
-      transform-style: preserve-3d;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .face {
-      position: absolute;
-      width: 150px;
-      height: 150px;
-      background: hsl(var(--hue), 70%, 50%);
-      border: 2px solid white;
-      opacity: 0.9;
-    }
-    .front  { transform: rotateY(0deg) translateZ(75px); }
-    .back   { transform: rotateY(180deg) translateZ(75px); }
-    .right  { transform: rotateY(90deg) translateZ(75px); }
-    .left   { transform: rotateY(-90deg) translateZ(75px); }
-    .top    { transform: rotateX(90deg) translateZ(75px); }
-    .bottom { transform: rotateX(-90deg) translateZ(75px); }
+
   </style>
 </head>
-<body>
-  <div class="label">Andrei1810</div>
-  <div class="cube" id="cube">
-    <div class="face front"></div>
-    <div class="face back"></div>
-    <div class="face right"></div>
-    <div class="face left"></div>
-    <div class="face top"></div>
-    <div class="face bottom"></div>
-  </div>
 
-
-  <script>
-    const cube = document.getElementById('cube');
-    const root = document.documentElement;
-    let virtualScroll = 0, targetRotX = 0, targetRotY = 0, targetHue = 210;
-    let curRotX = 0, curRotY = 0, curHue = 210;
-
-    function updateTargets(){
-      targetRotX = virtualScroll * 360;
-      targetRotY = virtualScroll * 540;
-      targetHue = ((virtualScroll * 120) % 360 + 360) % 360;
-    }
-
-    function loop(){
-      const ease = 0.12;
-      curRotX += (targetRotX - curRotX) * ease;
-      curRotY += (targetRotY - curRotY) * ease;
-      curHue  += (targetHue - curHue) * ease;
-      cube.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg)`;
-      root.style.setProperty('--hue', Math.floor(curHue));
-      requestAnimationFrame(loop);
-    }
-
-    window.addEventListener('wheel', e => {
-      virtualScroll += e.deltaY * 0.002;
-      updateTargets();
-    });
-
-    let touchStartY = 0;
-    window.addEventListener('touchstart', e => {
-      touchStartY = e.touches[0].clientY;
-    });
-    window.addEventListener('touchmove', e => {
-      let dy = touchStartY - e.touches[0].clientY;
-      virtualScroll += dy * 0.004;
-      updateTargets();
-      touchStartY = e.touches[0].clientY;
-    });
-
-    updateTargets();
-    loop();
-  </script>
 </body>
 </html>
